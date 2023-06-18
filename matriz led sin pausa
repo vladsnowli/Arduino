@@ -1,1 +1,29 @@
-hh
+#include <MD_Parola.h>
+#include <MD_MAX72xx.h>
+#include <SPI.h>
+
+#define HARDWARE_TYPE MD_MAX72XX::FC16_HW
+#define MAX_DEVICES 4
+#define CLK_PIN   13
+#define DATA_PIN  11
+#define CS_PIN    10
+
+MD_Parola P = MD_Parola(HARDWARE_TYPE, CS_PIN, MAX_DEVICES);
+
+textPosition_t scrollAlign = PA_CENTER;
+int scrollSpeed = 80; // Ajusta la velocidad de desplazamiento
+const char text[] = "vladi pro de pros en dota";
+
+void setup() {
+  P.begin();
+  P.setInvert(false);
+}
+
+void loop() {
+  P.displayReset(); // Restablecer la pantalla
+  P.displayText(text, scrollAlign, scrollSpeed, 0, PA_SCROLL_LEFT, PA_SCROLL_LEFT);
+
+  while (!P.displayAnimate()) {
+    // Continuar el bucle hasta que se haya mostrado todo el texto
+  }
+}
