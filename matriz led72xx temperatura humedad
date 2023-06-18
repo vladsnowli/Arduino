@@ -1,0 +1,43 @@
+#include <MD_Parola.h>
+#include <MD_MAX72xx.h>
+#include <SPI.h>
+#include <DHT.h>
+
+#define HARDWARE_TYPE MD_MAX72XX::FC16_HW
+#define MAX_DEVICES 4
+#define CLK_PIN   13
+#define DATA_PIN  11
+#define CS_PIN    10
+
+#define DHT_PIN 8
+#define DHT_TYPE DHT11
+
+MD_Parola P = MD_Parola(HARDWARE_TYPE, CS_PIN, MAX_DEVICES);
+DHT dht(DHT_PIN, DHT_TYPE);
+
+textPosition_t scrollAlign = PA_CENTER;
+uint16_t scrollSpeed = 100;
+uint16_t scrollPause = 5000;
+
+void setup() {
+  P.begin();
+  P.setTextAlignment(scrollAlign);
+  P.setInvert(false);
+  dht.begin();
+}
+
+void loop() {
+  // Leer la temperatura y mostrarla en la matriz LED
+  float temperature = dht.readTemperature();
+  P.print("T: " + String(temperature) + " C");
+  delay(5000);
+  P.displayClear();
+  delay(500);
+
+  // Leer la humedad y mostrarla en la matriz LED
+  float humidity = dht.readHumidity();
+  P.print("H: " + String(humidity) + " %");
+  delay(5000);
+  P.displayClear();
+  delay(500);
+}
